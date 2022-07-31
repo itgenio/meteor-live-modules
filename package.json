@@ -1,0 +1,28 @@
+{
+  "name": "@itgenio/live-modules",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Deploy any code to client's runtime",
+  "main": "package.js",
+  "scripts": {
+    "test": "meteor test-packages ./",
+    "publish": "npm prune --production && meteor publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itgenio/meteor-live-modules.git"
+  },
+  "keywords": [
+    "meteor"
+  ],
+  "author": "Alex So",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itgenio/meteor-live-modules/issues"
+  },
+  "homepage": "https://github.com/itgenio/meteor-live-modules#readme",
+  "devDependencies": {
+    "@types/meteor": "^2.7.1",
+    "typescript": "^4.7.4"
+  }
+}
