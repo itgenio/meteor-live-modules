@@ -58,6 +58,8 @@ meteor add itgenio:live-modules
 ```typescript
 import { LiveModulesConfig, LiveModulesCollection } from 'meteor/itgenio:live-modules';
 
+LiveModulesCollection.remove({}); //clean all modules
+
 LiveModulesCollection.insert({
   name: 'test-module1',
   v: 0,

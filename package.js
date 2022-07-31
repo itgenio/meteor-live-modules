@@ -3,6 +3,7 @@ Package.describe({
   version: '0.0.4',
   summary: 'Deploy any code to client\'s runtime',
   documentation: 'README.md',
+  git: 'https://github.com/itgenio/meteor-live-modules.git',
 });
 
 function configurePackage(api) {
