@@ -6,14 +6,14 @@ type ImportOptions = {
 
 export interface ILiveModules {
   /*
-   * Is subscribtion ready?
+   * Is subscription ready?
    */
   subReady(): Promise<void>;
 
   /*
    * Import module by name or tag
    */
-  importModule(tagOrName: string, opts?: ImportOptions): Promise<void>;
+  importModule(tagOrName: string, opts?: ImportOptions): Promise<any>;
 
   /*
    * Import modules by names or tags
@@ -23,6 +23,8 @@ export interface ILiveModules {
   subscribe(): Meteor.SubscriptionHandle;
 
   markAsReady(): void;
+
+  require(tagOrName: string): any | undefined;
 }
 
 export type DBLiveModule = {

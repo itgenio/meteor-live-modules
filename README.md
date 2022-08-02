@@ -126,10 +126,9 @@ const lazy = () => LiveModules.importModule('my-lazy-component');
 const SubComponent = suspense(() => {
   //Some magic...
   //But you just waiting for resolving promise
-  useService(lazy);
+  const { LazyComponent } = useService(lazy);
 
-  // `require` wil be used from module scope
-  return require('my-lazy-component').LazyComponent;
+  return LazyComponent;
 });
 
 export function MyPage() {
