@@ -3,7 +3,7 @@ import { LiveModulesConfig } from './config';
 
 const isDev = Meteor.isDevelopment;
 
-const PREFIX = `[LiveModules]`;
+const PREFIX = `[LiveModules]${Meteor.isServer ? '[SERVER]' : ''}`;
 const TAG = isDev ? `[DEV]` : '';
 
 export const log: typeof console.log = function(...args) {

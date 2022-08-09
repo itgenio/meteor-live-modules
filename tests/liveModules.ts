@@ -1,10 +1,10 @@
 import { LiveModules } from '../src/liveModules';
-import { MODULE_NAME_REQUIRED, MODULE_NAME_NON_REQUIRED } from './_init';
+import { MODULE_NAME_REQUIRED, MODULE_NAME_NON_REQUIRED, MODULE_NAME_CSS } from './_init';
 import { requireModule } from '../src/requireModule';
 
 Tinytest.addAsync(
   'LiveModules - subReady - auto subscribe by default',
-  async function(test) {
+  async function() {
     await LiveModules.subReady();
   },
 );
@@ -33,11 +33,24 @@ Tinytest.addAsync(
   },
 );
 
-Tinytest.addAsync(
+Tinytest.add(
   'LiveModules - require - by name',
-  async function(test) {
+  function(test) {
     const m = LiveModules.require(MODULE_NAME_REQUIRED);
     test.isNotUndefined(m);
     test.equal(m.name, MODULE_NAME_REQUIRED);
+  },
+);
+
+Tinytest.addAsync(
+  'LiveModules - import - css',
+ async function(test) {
+    await LiveModules.importModule(MODULE_NAME_CSS);
+
+   if(Meteor.isClient) {
+     test.equal((document.querySelector<HTMLStyleElement>(`style[data-module="${MODULE_NAME_CSS}"]`))?.textContent, '.itgenio-css { }');
+   }else{
+     //TOOD how to test?
+   }
   },
 );

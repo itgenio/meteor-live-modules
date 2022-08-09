@@ -1,10 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { LiveModulesConfig } from './config';
 import { LiveModulesCollection } from './shared';
+import { LiveModules } from './liveModules';
 import { log } from './logger';
 import type { DBLiveModule } from './types';
 
-export { LiveModulesCollection, LiveModulesConfig };
+export { LiveModules, LiveModulesCollection, LiveModulesConfig };
 
 //send only enabled modules
 Meteor.publish(LiveModulesConfig.subName, function() {
@@ -13,9 +14,7 @@ Meteor.publish(LiveModulesConfig.subName, function() {
 
 Meteor.startup(() => {
   log(`initialized, modules:`,
-    LiveModulesCollection.find({ enabled: true }, { fields: { name: 1 } })
-      .map(m => m.name)
-      .join(','),
+    Object.keys(LiveModules.getModulesWithTagsOrNames([])).join(','),
   );
 });
 

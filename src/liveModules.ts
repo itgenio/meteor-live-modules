@@ -28,7 +28,7 @@ type ImportOptions = {
 };
 
 export const LiveModules: ILiveModules = new (class LiveModulesClass implements ILiveModules {
-  private getModulesWithTagsOrNames(tagsOrNames: string[]) {
+  getModulesWithTagsOrNames(tagsOrNames: string[]) {
     return LiveModulesCollection.find({
       enabled: true,
       $or: [{ tags: { $in: tagsOrNames } }, { name: { $in: tagsOrNames } }],
@@ -182,19 +182,27 @@ export const LiveModules: ILiveModules = new (class LiveModulesClass implements 
   subscribe() {
     const ts = Date.now();
     log(`subscribe ...`);
-    const sub = Meteor.subscribe(LiveModulesConfig.subName);
 
-    const t = Tracker.autorun(() => {
-      const isReady = sub.ready();
+    if (Meteor.isClient) {
+      const sub = Meteor.subscribe(LiveModulesConfig.subName);
 
-      if (isReady) {
-        this.markAsReady();
-        t.stop();
-        log(`subscribed, elapsed time: ${Date.now() - ts}ms`);
-      }
-    });
+      const t = Tracker.autorun(() => {
+        const isReady = sub.ready();
 
-    return sub;
+        if (isReady) {
+          this.markAsReady();
+          t.stop();
+          log(`subscribed on client, elapsed time: ${Date.now() - ts}ms`);
+        }
+      });
+    } else if (Meteor.isServer) {
+      this.markAsReady();
+      log(`subscribed on server, elapsed time: ${Date.now() - ts}ms`);
+    } else {
+      log(`What is it? Not client nor server ...`);
+    }
+
+    return;
   }
 
   markAsReady(): void {

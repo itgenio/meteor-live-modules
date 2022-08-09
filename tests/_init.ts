@@ -3,6 +3,7 @@ import { LiveModulesCollection } from '../src/shared';
 
 export const MODULE_NAME_NON_REQUIRED = `@itgenio/non-required`;
 export const MODULE_NAME_REQUIRED = `@itgenio/required`;
+export const MODULE_NAME_CSS = `@itgenio/css`;
 
 if (Meteor.isServer) {
   LiveModulesCollection.remove({});
@@ -21,5 +22,11 @@ if (Meteor.isServer) {
     enabled: true,
     required: true,
     source: `${LiveModulesConfig.jsMarker} meteorInstall({"node_modules":{"@itgenio":{"required"(r,e,m){console.log('hello from required'); Object['${MODULE_NAME_REQUIRED}']=true; e.name = "${MODULE_NAME_REQUIRED}"}}}})`,
+  });
+  LiveModulesCollection.insert({
+    name: MODULE_NAME_CSS,
+    v: 0,
+    enabled: true,
+    source: `.itgenio-css { }`,
   });
 }

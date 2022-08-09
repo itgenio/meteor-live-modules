@@ -1,7 +1,12 @@
+import { warn } from './logger';
+
 export const DATA_ATTRIBUTE_NAME = `data-module`;
 
 export function evaluateAsCSS(css: string, moduleName: string) {
-  if (typeof document === 'undefined') return;
+  if (typeof document === 'undefined') {
+    warn(`Can't evaluate css because there is no document`)
+    return;
+  }
 
   const head = document.getElementsByTagName('head').item(0)!;
 

@@ -1,10 +1,10 @@
-import type { Meteor } from 'meteor/meteor';
-
 type ImportOptions = {
   importTimeout?: number;
 };
 
 export interface ILiveModules {
+  getModulesWithTagsOrNames(tagsOrNames: string[]): Record<string, DBLiveModule>;
+
   /*
    * Is subscription ready?
    */
@@ -20,7 +20,7 @@ export interface ILiveModules {
    */
   importModules(tagsOrNames?: string[], opts?: ImportOptions): Promise<void>;
 
-  subscribe(): Meteor.SubscriptionHandle;
+  subscribe(): void;
 
   markAsReady(): void;
 

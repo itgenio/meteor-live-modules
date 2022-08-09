@@ -1,5 +1,10 @@
 # Changelog
 
+**0.0.6**
+
+- Supports Server Side
+- Changes: `LiveModules.subscribe` returns `undefined` (return type `void`)
+
 **0.0.5**
 
 - New: `LiveModules.require(tagOrName:string)`;
