@@ -1,8 +1,12 @@
 # Changelog
 
+**0.0.7**
+
+- Server side modules now support `url` too. Thanks to `meteor/fetch`.
+
 **0.0.6**
 
-- Supports Server Side
+- Supports Server Side. Works only for modules with source.
 - Changes: `LiveModules.subscribe` returns `undefined` (return type `void`)
 
 **0.0.5**

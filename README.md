@@ -1,6 +1,6 @@
 # meteor/itgenio:live-modules
 
-Deploy any code to client's runtime in any time.
+Deploy any code to client/server runtime in any time.
 
 ## Installation
 
@@ -15,7 +15,7 @@ meteor add itgenio:live-modules
 - by inserting documents into `LiveModulesCollection`;
 - by using helper class `LiveModulesServiceDefault`.
 
-3. **(client side)** Use `LiveModules.importModule(...)` or `LiveModules.importModules(..)` anywhere to import a code.
+3. **(client/server side)** Use `LiveModules.importModule(...)` or `LiveModules.importModules(..)` anywhere to import a code.
 
 [See an example](#example)
 
@@ -25,6 +25,7 @@ meteor add itgenio:live-modules
 - Import modules by specific tags or name
 - `importTimeout` to control imports time
 - Works with JS & CSS
+- Server and Client
 
 ## Configuration via Meteor.settings
 
@@ -148,6 +149,8 @@ It's not safe, so be careful to use `source` field.
 **evaluate as CSS**
 
 If the url ends with `.css` or the `source` field doesn't start with `LiveModulesConfig.jsMarker`.
+
+Only works on the Client side.
 
 ## Types
 

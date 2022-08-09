@@ -1,6 +1,6 @@
 Package.describe({
   name: 'itgenio:live-modules',
-  version: '0.0.6',
+  version: '0.0.7',
   summary: 'Deploy any code to client/server runtime',
   documentation: 'README.md',
   git: 'https://github.com/itgenio/meteor-live-modules.git',
@@ -8,7 +8,7 @@ Package.describe({
 
 function configurePackage(api) {
   api.versionsFrom('2.0');
-  api.use(['typescript', 'mongo', 'minimongo', 'tracker']);
+  api.use(['typescript', 'mongo', 'minimongo', 'tracker', 'fetch']);
 
   api.mainModule('src/server.ts', 'server');
   api.mainModule('src/client.ts', 'client');
@@ -28,5 +28,5 @@ Package.onTest(function(api) {
   api.addFiles(['tests/_init.ts', 'tests/utils.ts'], ['client', 'server']);
 
   api.addFiles(['tests/evaluateAsCSS.ts'], 'client');
-  api.addFiles(['tests/liveModules.ts', 'tests/getModulesByNameOrTag.ts'], ['client','server']);
+  api.addFiles(['tests/liveModules.ts', 'tests/getModulesByNameOrTag.ts'], ['client', 'server']);
 });

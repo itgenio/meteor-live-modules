@@ -1,5 +1,5 @@
 import { LiveModules } from '../src/liveModules';
-import { MODULE_NAME_REQUIRED, MODULE_NAME_NON_REQUIRED, MODULE_NAME_CSS } from './_init';
+import { MODULE_NAME_REQUIRED, MODULE_NAME_NON_REQUIRED, MODULE_NAME_CSS, MODULE_NAME_REMOTE } from './_init';
 import { requireModule } from '../src/requireModule';
 
 Tinytest.addAsync(
@@ -44,13 +44,34 @@ Tinytest.add(
 
 Tinytest.addAsync(
   'LiveModules - import - css',
- async function(test) {
+  async function(test) {
     await LiveModules.importModule(MODULE_NAME_CSS);
 
-   if(Meteor.isClient) {
-     test.equal((document.querySelector<HTMLStyleElement>(`style[data-module="${MODULE_NAME_CSS}"]`))?.textContent, '.itgenio-css { }');
-   }else{
-     //TOOD how to test?
-   }
+    if (Meteor.isClient) {
+      test.equal((document.querySelector<HTMLStyleElement>(`style[data-module="${MODULE_NAME_CSS}"]`))?.textContent, '.itgenio-css { }');
+    } else {
+      //TOOD how to test?
+    }
+  },
+);
+
+Tinytest.addAsync(
+  'LiveModules - import - remote',
+  async function(test) {
+    await LiveModules.importModule(MODULE_NAME_REMOTE);
+
+    if (Meteor.isClient) {
+      const { SketchpadPlugin } = LiveModules.require(MODULE_NAME_REMOTE);
+
+      test.isNotUndefined(SketchpadPlugin);
+    }
+
+    if (Meteor.isServer) {
+      try {
+        LiveModules.require(MODULE_NAME_REMOTE);
+      } catch (e: any) {
+        test.equal(e.message, 'window is not defined');
+      }
+    }
   },
 );

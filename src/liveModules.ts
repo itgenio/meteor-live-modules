@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { fetch } from 'meteor/fetch';
 import { Tracker } from 'meteor/tracker';
 import { LiveModulesConfig } from './config';
 import { evaluateAsCSS } from './evaluateAsCSS';

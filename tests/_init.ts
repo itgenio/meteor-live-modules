@@ -4,6 +4,7 @@ import { LiveModulesCollection } from '../src/shared';
 export const MODULE_NAME_NON_REQUIRED = `@itgenio/non-required`;
 export const MODULE_NAME_REQUIRED = `@itgenio/required`;
 export const MODULE_NAME_CSS = `@itgenio/css`;
+export const MODULE_NAME_REMOTE = `@itgenio/sketchpad-plugin`;
 
 if (Meteor.isServer) {
   LiveModulesCollection.remove({});
@@ -28,5 +29,11 @@ if (Meteor.isServer) {
     v: 0,
     enabled: true,
     source: `.itgenio-css { }`,
+  });
+  LiveModulesCollection.insert({
+    name: MODULE_NAME_REMOTE,
+    v: 0,
+    enabled: true,
+    url: 'https://cdn.jsdelivr.net/npm/@itgenio/sketchpad-plugin@0.0.15/dist/index.meteor.js',
   });
 }
