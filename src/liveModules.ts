@@ -26,6 +26,7 @@ const NOT_FOUND_MARKERS = [`<!DOCTYPE html>`];
 
 type ImportOptions = {
   importTimeout?: number;
+  disableCache?: boolean
 };
 
 export const LiveModules: ILiveModules = new (class LiveModulesClass implements ILiveModules {
@@ -67,7 +68,7 @@ export const LiveModules: ILiveModules = new (class LiveModulesClass implements 
         rej('timeout');
       }, importTimeout);
 
-      this._import(tagsOrNames)
+      this._import(tagsOrNames, opts)
         .then(() => {
           !resolved && res();
           clearTimeout(timeoutId);
@@ -76,7 +77,7 @@ export const LiveModules: ILiveModules = new (class LiveModulesClass implements 
     });
   }
 
-  private async _import(tagsOrNames: string[] = []) {
+  private async _import(tagsOrNames: string[] = [], opts: ImportOptions = {}) {
     const prefixString = `[${tagsOrNames.join(',')}]`;
     let st = Date.now();
 
@@ -132,6 +133,14 @@ export const LiveModules: ILiveModules = new (class LiveModulesClass implements 
 
       await Promise.allSettled(
         entries.map(([moduleName, module]) => {
+          if (!opts.disableCache) {
+            try {
+              return requireModule(moduleName);
+            } catch (e) {
+              // it's ok, this module currently not evaluated
+            }
+          }
+
           if (module.url) {
             return fetch(module.url)
               .then(async r => {

@@ -1,5 +1,10 @@
 # Changelog
 
+**0.0.8**
+
+- Breaking change: when import a module, try to require installed module and if it doesn't exist, load it
+- Add option `disableCache`
+
 **0.0.7**
 
 - Server side modules now support `url` too. Thanks to `meteor/fetch`.
