@@ -1,6 +1,6 @@
 Package.describe({
   name: 'itgenio:live-modules',
-  version: '0.0.8',
+  version: '0.0.9',
   summary: 'Deploy any code to client/server runtime',
   documentation: 'README.md',
   git: 'https://github.com/itgenio/meteor-live-modules.git',

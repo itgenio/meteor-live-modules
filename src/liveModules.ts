@@ -1,17 +1,16 @@
-import { Meteor } from 'meteor/meteor';
 import { fetch } from 'meteor/fetch';
+import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
 import { LiveModulesConfig } from './config';
 import { evaluateAsCSS } from './evaluateAsCSS';
+import { getModulesByNameOrTag } from './getModulesByNameOrTag';
+import { log, notice, warn } from './logger';
+import { requireModule } from './requireModule';
 import { LiveModulesCollection } from './shared';
 import type { DBLiveModule, ILiveModules } from './types';
-import { log, notice, warn } from './logger';
 import { isCSSModule, isJSModule } from './utils';
-import { requireModule } from './requireModule';
-import { getModulesByNameOrTag } from './getModulesByNameOrTag';
 
-let resolveReadyPromise: Function = () => {
-};
+let resolveReadyPromise: Function = () => {};
 const readyPromise = new Promise<void>(res => {
   resolveReadyPromise = res;
 });
@@ -19,14 +18,18 @@ const readyPromise = new Promise<void>(res => {
 if (LiveModulesConfig.subOnStartup) {
   Meteor.startup(() => LiveModules.subscribe());
 } else {
-  notice(`Because 'subOnStartup' set to 'false', you should manually subscribe to a subscription '${LiveModulesConfig.subName}' before import any module and then call 'LiveModules.markAsReady()'`);
+  notice(
+    `Because 'subOnStartup' set to 'false', you should manually subscribe to a subscription '${LiveModulesConfig.subName}' before import any module and then call 'LiveModules.markAsReady()'`
+  );
 }
 
 const NOT_FOUND_MARKERS = [`<!DOCTYPE html>`];
 
 type ImportOptions = {
   importTimeout?: number;
-  disableCache?: boolean
+  disableCache?: boolean;
+  eval?: (args: any) => any;
+  require?: NodeRequire;
 };
 
 export const LiveModules: ILiveModules = new (class LiveModulesClass implements ILiveModules {
@@ -52,7 +55,7 @@ export const LiveModules: ILiveModules = new (class LiveModulesClass implements 
     const [module] = getModulesByNameOrTag(tagOrName);
 
     if (module && module.required) {
-      return requireModule(module.name);
+      return (opts.require ?? requireModule)(module.name);
     }
   }
 
@@ -110,10 +113,10 @@ export const LiveModules: ILiveModules = new (class LiveModulesClass implements 
 
       const willBeRequired = [] as DBLiveModule[];
 
-      const tryToEvaluate = function tryToEvaluate(module: DBLiveModule, source: string) {
+      const tryToEvaluate = async function tryToEvaluate(module: DBLiveModule, source: string) {
         try {
           if (isJSModule(source, module.url)) {
-            eval(source);
+            await (opts.eval ?? eval)(source);
             log(module.name, `evaluated as JS`);
 
             if (module.required) {
@@ -135,7 +138,7 @@ export const LiveModules: ILiveModules = new (class LiveModulesClass implements 
         entries.map(([moduleName, module]) => {
           if (!opts.disableCache) {
             try {
-              return requireModule(moduleName);
+              return (opts.require ?? requireModule)(moduleName);
             } catch (e) {
               // it's ok, this module currently not evaluated
             }
@@ -152,7 +155,7 @@ export const LiveModules: ILiveModules = new (class LiveModulesClass implements 
                   } else {
                     log(moduleName, `loaded from path: ${module.url}`);
 
-                    tryToEvaluate(module, txt);
+                    return tryToEvaluate(module, txt);
                   }
                 } catch (e) {
                   warn(moduleName, `error while handle:`);
@@ -165,14 +168,14 @@ export const LiveModules: ILiveModules = new (class LiveModulesClass implements 
               });
           } else if (module.source) {
             log(moduleName, `loaded from source`);
-            tryToEvaluate(module, module.source);
+            return tryToEvaluate(module, module.source);
           }
-        }),
+        })
       );
 
       willBeRequired.forEach(module => {
         try {
-          requireModule(module.name);
+          (opts.require ?? requireModule)(module.name);
           log(module.name, `required`);
         } catch (e) {
           warn(module.name, `error while require:`);

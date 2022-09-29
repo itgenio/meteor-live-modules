@@ -1,5 +1,9 @@
 # Changelog
 
+**0.0.9**
+
+- Add options `eval` and `require` for import
+
 **0.0.8**
 
 - Breaking change: when import a module, try to require installed module and if it doesn't exist, load it
